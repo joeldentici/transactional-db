@@ -1,0 +1,16 @@
+{
+  "name": "transactional",
+  "version": "0.0.1",
+  "description": "A library for composing database transactions.",
+  "contributors": [
+    {
+      "name": "Joel Dentici",
+      "email": "joeldentici@cox.net"
+    }
+  ],
+  "main": "src/transactional.js",
+  "dependencies": {
+    "mysql": "^2.10.2",
+    "rx": "^4.1.0"
+  }
+}
