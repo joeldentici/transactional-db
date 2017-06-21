@@ -80,5 +80,7 @@ The only way around this is to not use the DSL. As long as we use it, the only t
 
 Other solutions, such as defining functions that run a set of statements as a transaction (1 above), or only executing queries in certain places in the software (2 above) can only make one of these guarantees.
 
+Note: This example is contrived and you would probably just do all the queries in one function. This doesn't preclude the fact that there are times in a real system where you want to: Run only Transaction A, Run only Transaction B, or Run both Transaction A and Transaction B in a single large Transaction.
+
 # credits
 I stole the idea from [https://github.com/helium/postgresql-transactional](here). Their software is written in Haskell and uses a Monad Transformer rather than a Free Monad.
