@@ -1,7 +1,7 @@
 'use strict';
 
 const {nolog} = require('./logger.js');
-const DBHManager = require('./DBHManager');
+const DBHManager = require('./dbhmanager.js');
 const {createManager} = require('./mysql/mysqldbh.js');
 
 /**

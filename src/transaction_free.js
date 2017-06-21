@@ -457,7 +457,7 @@ function runTransaction(conn, bus, trans) {
 
 	//if the transaction is successful, publish the events that were
 	//emitted during it onto the provided event bus
-	res.then(() => evs.forEach(([ev, data]) => bus.publish(ev, data)));
+	res.then(() => evs.forEach(([ev, data]) => bus.publish(ev, data)), e => null);
 
 	return res;
 }
@@ -476,7 +476,7 @@ exports.runWith = function(dbm, bus, trans) {
 		return runTransaction(conn, bus, trans).then(
 			(val) => {
 				//close the connection & return result
-				conn.close()
+				conn.close();
 				return Promise.resolve(val);
 			},
 			(err) => {

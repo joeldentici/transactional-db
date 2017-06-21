@@ -20,6 +20,7 @@ class MySQLDBH {
 	 */
 	constructor(base) {
 		this.base = base;
+		this._status$ = Rx.Observable.just('Not Implemented').share();
 	}
 
 	/**
@@ -70,7 +71,7 @@ class MySQLDBH {
 	 */
 	get status$() {
 		//TODO: implement
-		return Rx.Observable.just('Not Implemented');
+		return this._status$;
 	}
 
 	/**

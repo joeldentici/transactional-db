@@ -26,7 +26,7 @@ class PooledDBH {
 		this.base = base;
 		this.closed = false;
 		this.stmts = [];
-		this.closedError = Promise.reject(
+		this.closedError = () => Promise.reject(
 			new Error("Cannot use closed pooled connection."));
 
 		//status stream
@@ -52,7 +52,7 @@ class PooledDBH {
 	 */
 	beginTransaction() {
 		if (this.closed) {
-			return this.closedError;
+			return this.closedError();
 		}
 		return this.base.beginTransaction();
 	}
@@ -64,7 +64,7 @@ class PooledDBH {
 	 */
 	commit() {
 		if (this.closed) {
-			return this.closedError;
+			return this.closedError();
 		}
 		return this.base.commit();
 	}
@@ -76,7 +76,7 @@ class PooledDBH {
 	 */
 	rollback() {
 		if (this.closed) {
-			return this.closedError;
+			return this.closedError();
 		}
 		return this.base.rollback();
 	}
@@ -88,7 +88,7 @@ class PooledDBH {
 	 */
 	prepare(sql) {
 		if (this.closed) {
-			return this.closedError;
+			return this.closedError();
 		}
 
 		//prepare statement and then
@@ -117,7 +117,7 @@ class PooledDBH {
 	 */
 	connect() {
 		if (this.closed) {
-			return this.closedError;
+			return this.closedError();
 		}
 		return this.base.connect();
 	}

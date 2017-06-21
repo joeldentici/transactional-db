@@ -125,8 +125,8 @@ function createPooled(manager) {
 		const pooled = new PooledDBH(conn);
 		
 		//return base connection to pool once it closes
-		pooled.getStatus$().subscribe({
-			onEnd: () => manager.toPool(conn),
+		pooled.status$.subscribe({
+			onCompleted: () => manager.toPool(conn),
 			onError: () => manager.toPool(conn),
 			onNext: () => {},
 		});

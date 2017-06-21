@@ -53,7 +53,7 @@ class MySQLStatement {
 	 *	with the result of the query.
 	 */	
 	execute(...bindings) {
-		return this.query(this.str, bindings).then(mapper(this.__type));
+		return this.query(this.str, bindings).then(mapper[this.__type]);
 	}
 
 	/**
