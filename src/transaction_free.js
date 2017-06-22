@@ -1,4 +1,4 @@
-const {Free, Utility, Maybe} = require('monadic');
+const {Free, Utility, Maybe} = require('monadic-js');
 const CaseClass = require('js-helpers').CaseClass;
 const {doM} = Utility;
 

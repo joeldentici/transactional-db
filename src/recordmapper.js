@@ -1,7 +1,7 @@
 'use strict';
 
 const {objectSplit} = require('js-helpers');
-const {Maybe, Utility} = require('monadic');
+const {Maybe, Utility} = require('monadic-js');
 const doM = Utility.doM;
 
 /**
