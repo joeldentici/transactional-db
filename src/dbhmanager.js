@@ -92,12 +92,28 @@ class DBHManager {
 	 *	resulting Async at the root of your application.
 	 */
 	runTransaction(trans, bus = {publish: (_,__) => null}) {
+		return Async.run(this.interpretTransaction(trans, bus));
+	}
+
+	/**
+	 *	interpretTransaction :: DBHManager -> (Async | Transaction) DBError a -> Async DBError a
+	 *
+	 *	Convenience method to interpret transactions. The transaction is a Free monad
+	 *	whose values can be of type Async or Transaction.
+	 *
+	 *	The transaction is interpreted to an Async.
+	 *
+	 *	For most applications, this should not be used -- instead create and use your own
+	 *	composite interpreter including the transactional interpreter and run the
+	 *	resulting Async at the root of your application.
+	 */
+	interpretTransaction(trans, bus = {publish(_, __) {}}) {
 		const interpret = Free.createInterpreter(
 			Async,
 			Async.interpreter,
 			interpreter(this, bus));
 
-		return Async.run(interpret(trans));
+		return interpret(trans);
 	}
 
 	/**
