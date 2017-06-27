@@ -1,6 +1,9 @@
 'use strict';
 
 const mysql = require('mysql');
+
+const Async = require('monadic-js').Async;
+
 const {promisfy} = require('js-helpers');
 const MySQLStatement = require('./mysqlstatement.js');
 const Rx = require('rx');
@@ -30,7 +33,7 @@ class MySQLDBH {
 	 *	for the result of beginning the transaction.
 	 */
 	beginTransaction() {
-		return promisfy(this.base.beginTransaction.bind(this.base))();
+		return Async.wrap(this.base.beginTransaction.bind(this.base))();
 	}
 
 	/**
@@ -40,7 +43,7 @@ class MySQLDBH {
 	 *	for the result.
 	 */
 	commit() {
-		return promisfy(this.base.commit.bind(this.base))();
+		return Async.wrap(this.base.commit.bind(this.base))();
 	}
 
 	/**
@@ -50,7 +53,7 @@ class MySQLDBH {
 	 *	for when rollingback finishes.
 	 */
 	rollback() {
-		return promisfy(this.base.rollback.bind(this.base))();
+		return Async.wrap(this.base.rollback.bind(this.base))();
 	}
 
 	/**
@@ -61,7 +64,7 @@ class MySQLDBH {
 	 *	for a statement handle.
 	 */
 	prepare(sql) {
-		return Promise.resolve(new MySQLStatement(this.base, sql));
+		return Async.unit(new MySQLStatement(this.base, sql));
 	}
 
 	/**
@@ -82,7 +85,7 @@ class MySQLDBH {
 	 *	connection.
 	 */
 	connect() {
-		return promisfy(this.base.connect.bind(this.base))();
+		return Async.wrap(this.base.connect.bind(this.base))();
 	}
 
 	/**
@@ -109,9 +112,9 @@ exports.createManager = function(poolSize, options) {
 	delete options['connectionLimit'];
 
 	return {
-		create: () => Promise.resolve(
+		create: () => Async.unit(
 			new MySQLDBH(mysql.createConnection(options))),
-		fromPool: () => promisfy(pool.getConnection.bind(pool))().then(conn => 
+		fromPool: () => Async.wrap(pool.getConnection.bind(pool))().map(conn => 
 			new MySQLDBH(conn)),
 		toPool: (conn) => conn.base.release(),
 		shutdown: () => pool.end()

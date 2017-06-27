@@ -1,6 +1,7 @@
 'use strict';
 
 const {promisfy} = require('js-helpers');
+const Async = require('monadic-js').Async;
 
 /**
  *	Transactional.MySQLStatement
@@ -32,7 +33,7 @@ class MySQLStatement {
 	constructor(dbh, str) {
 		this.dbh = dbh;
 		this.str = str;
-		this.query = promisfy(this.dbh.query.bind(this.dbh));
+		this.query = Async.wrap(this.dbh.query.bind(this.dbh));
 
 		//figure out the type of statement
 		const start = str.trim().toLowerCase();
@@ -53,7 +54,7 @@ class MySQLStatement {
 	 *	with the result of the query.
 	 */	
 	execute(...bindings) {
-		return this.query(this.str, bindings).then(mapper[this.__type]);
+		return this.query(this.str, bindings).map(mapper[this.__type]);
 	}
 
 	/**

@@ -2,7 +2,8 @@
 
 const PooledDBH = require('./pooleddbh.js');
 const RecordMapper = require('./recordmapper.js');
-const {runWith} = require('./transaction_free.js');
+const {interpreter} = require('./transaction_free.js');
+const {Async, Free} = require('monadic-js');
 
 /**
  *	Transactional.DBHManager
@@ -58,8 +59,8 @@ class DBHManager {
 		//create the connection and then wrap it in
 		//a record mapper
 		return this.create()
-		.then(this.createLogger)
-		.then(createMapper);
+			.map(this.createLogger)
+			.map(createMapper);
 	}
 
 	/**
@@ -73,21 +74,30 @@ class DBHManager {
 		//grab the connection, and then wrap it in a pooled
 		//connection. wrap that in a record mapper
 		return this.fromPool()
-		.then(createPooled(this))
-		.then(this.createLogger)
-		.then(createMapper);
+			.map(createPooled(this))
+			.map(this.createLogger)
+			.map(createMapper);
 	}
 
 	/**
-	 *	runTransaction :: DBHManager -> Transaction DBError Any -> Promise Any DBError
+	 *	runTransaction :: DBHManager -> (Async | Transaction) DBError a -> Promise a DBError
 	 *
-	 *	Gets a connection from the connection pool,
-	 *	runs the provided transaction monad with it,
-	 *	and then closes the transaction. Returns a promise
-	 *	for the result of executing the transaction.
+	 *	Convenience method to run transactions. The transaction is a Free monad
+	 *	whose values can be of type Async or Transaction.
+	 *
+	 *	The transaction is interpreted to an Async, and the Async is then ran.
+	 *
+	 *	For most applications, this should not be used -- instead create and use your own
+	 *	composite interpreter including the transactional interpreter and run the
+	 *	resulting Async at the root of your application.
 	 */
 	runTransaction(trans, bus = {publish: (_,__) => null}) {
-		return runWith(this, bus, trans);
+		const interpret = Free.createInterpreter(
+			Async,
+			Async.interpreter,
+			interpreter(this, bus));
+
+		return Async.run(interpret(trans));
 	}
 
 	/**

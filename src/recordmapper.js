@@ -1,7 +1,7 @@
 'use strict';
 
 const {objectSplit} = require('js-helpers');
-const {Maybe, Utility} = require('monadic-js');
+const {Maybe, Utility, Async} = require('monadic-js');
 const doM = Utility.doM;
 
 /**
@@ -89,12 +89,12 @@ class RecordMapper {
 	read(table, id) {
 		return this.query(
 			`SELECT * FROM ${table} WHERE id = ?`,
-			id).then(res => {
+			id).bind(res => {
 				if (res.length > 0) {
-					return Promise.resolve(Maybe.Just(res[0]));
+					return Async.unit(Maybe.Just(res[0]));
 				}
 				else {
-					return Promise.resolve(Maybe.Nothing);
+					return Async.unit(Maybe.Nothing);
 				}
 			});
 	}
@@ -116,7 +116,7 @@ class RecordMapper {
 			const stmt = yield self.prepare(sql);
 			const res = yield stmt.execute(...bindings);
 			stmt.destroy();
-			return res;
+			return Async.unit(res);
 		});
 	}
 

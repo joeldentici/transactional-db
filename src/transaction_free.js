@@ -1,4 +1,4 @@
-const {Free, Utility, Maybe} = require('monadic-js');
+const {Free, Utility, Maybe, Async} = require('monadic-js');
 const CaseClass = require('js-helpers').CaseClass;
 const {doM} = Utility;
 
@@ -84,6 +84,9 @@ class Transaction {
 	/**
 	 *	throwE :: Error -> Transaction ()
 	 *
+	 *	DEPRECATED: Use Async.fail instead and use
+	 *	Async.interpreter in your interpreter set.
+	 *
 	 *	Raise an error with the transaction. This will
 	 *	cause a rollback to happen.
 	 */
@@ -115,13 +118,13 @@ class Transaction {
 	}
 
 	/**
-	 *	skip :: () -> Transaction ()
+	 *	skip :: a -> Transaction a
 	 *
 	 *	Causes any further statements in the transaction to
 	 *	be skipped.
 	 */
-	static skip() {
-		return Free.liftF(new Skip(x => x));
+	static skip(val) {
+		return Free.liftF(new Skip(val));
 	}
 
 	/**
@@ -304,17 +307,17 @@ class Emit extends CaseClass {
 }
 
 class Skip extends CaseClass {
-	constructor(next) {
+	constructor(val, next) {
 		super('Skip');
-		this.next = next;
+		this.val = val;
 	}
 
 	map(f) {
-		return new Skip(f(this.next));
+		return this;
 	}
 
 	doCase(fn) {
-		return fn(this.next);
+		return fn(this.val);
 	}
 }
 
@@ -350,142 +353,103 @@ class LiftPromise extends CaseClass {
 	}
 }
 
-const defaultRetrieve = {
-	insert: (_,__) => 1,
-	query: (_,__) => [],
-	read: (_,__) => Maybe.Nothing,
-	execute: (_,__) => [],
-};
-
-/**
- *	show :: Transaction a -> IRetrieve -> String
- *
- *	Returns a string representation of the
- *	transaction.
- *
- *	The optional IRetrieve object provides methods
- *	to mock retrieval of data. This allows testing
- *	basic logic, by returning different data for
- *	different queries. The object must provide methods
- *	for:
- *		insert: Gets insertId for (table,record)
- *		query: Gets [Record] for (sql,bindings)
- *		read: Gets (Maybe Record) for (table, id)
- *		execute: Gets [Record] for (stmt#, bindings)
- */
-exports.show = function(trans, retrieve = defaultRetrieve) {
-	function showR(trans, stmts) {
-		return trans.case({
-			'Free': x => x.case({
-				'Insert': (t,r,n) => `\tInsert into '${t}':\n\t\t` 
-					+ JSON.stringify(r) + "\n" + showR(n(retrieve.insert(t,r)), stmts),
-				'Query': (s,b,n) => `\tRun Query '${s}'(\n\t\t`
-					+ b.join(',') + ")\n" + showR(n(retrieve.query(s,b)), stmts),
-				'Update': (t,r,n) => `\tUpdate table '${t}':\n\t\t`
-					+ JSON.stringify(r) + "\n" + showR(n(), stmts),
-				"Delete": (t,r,n) => `\tDelete from '${t}':\n\t\t`
-					+ JSON.stringify(r) + "\n" + showR(n(), stmts),
-				"Read": (t,i,n) => `\tRead id ${i} from '${t}'\n` + showR(n(retrieve.read(t,i)), stmts),
-				"Prepare": (s,n) => `\tStatement ${stmts} <- PrepareStatement(\n\t\t'${s}')\n` + showR(n(stmts), stmts + 1),
-				"Execute": (s,a,n) => `\tExecute Statement ${s}(\n\t\t` + a.join(',') + ")\n" + showR(n(retrieve.execute(s,a)), stmts),
-				"ThrowE": e => `\nTransaction Failed: ${e}`,
-				"Emit": (e,d,n) => `\tEmit event '${e}':\n\t\t` + JSON.stringify(d) + "\n" + showR(n, stmts),
-				"LiftPromise": (p,n) => "\tAwait Promise\n" + showR(n(1), stmts),
-			}),
-			'Return': v => `\nTransaction Result: ` + JSON.stringify(v),
-		});	
+class Interpret {
+	constructor(dbm, bus, exec) {
+		this.dbm = dbm;
+		this.bus = bus;
+		this.execute = exec;
 	}
 
-	return 'Transaction Statements:\n' + showR(trans, 1);
+	/**
+	 *	prepare :: Interpret -> () -> Async ()
+	 *
+	 *	Prepares a context to interpret in.
+	 */
+	prepare() {
+		const self = this;
+
+		return doM(function*() {
+			self.conn = yield self.dbm.getConnection();
+
+			yield self.conn.beginTransaction();
+
+			self.events = [];
+
+			return Async.unit();
+		});
+	}
+
+	/**
+	 *	map :: Interpret -> Transaction a -> (Async a, (a -> Free f b) | Free f b)
+	 *
+	 *	Maps the transaction to an Async
+	 */
+	map(trans) {
+		const self = this;
+		const conn = this.conn;
+		const events = this.events;
+		return trans.case({
+			'Insert': (t,r,n) => [conn.insert(t, r), n],
+			'Query': (s,b,n) => [conn.query(s, ...b), n],
+			'Update': (t,r,n) => [conn.update(t, r), n],
+			'Delete': (t,r,n) => [conn.delete(t, r), n],
+			'Read': (t,i,n) => [conn.read(t, i), n],
+			'Prepare': (s,n) => [conn.prepare(s), n],
+			'Execute': (s,a,n) => [s.execute(...a), n],
+			'Emit': (e,d,n) => {events.push([e,d]); return [Async.unit(), n];},
+			'ThrowE': e => [Async.fail(e), null],
+			'Skip': (v,n) => [Async.unit(v), null],
+			'Continue': (n, n2) => [self.execute(n) , n2],
+			default: _ => null,
+		});
+	}
+
+	/**
+	 *	cleanup :: Interpret -> a -> Async b a
+	 *
+	 *	Cleans up the resources used to interpret.
+	 */
+	cleanup(result) {
+		const self = this;
+
+		return doM(function*() {
+			yield self.conn.commit();
+
+			self.conn.close();
+
+			self.events.forEach(([e,d]) => self.bus.publish(e, d));
+
+			return Async.unit(result);
+		});
+	}
+
+	/**
+	 *	cleanupErr :: Interpret -> b -> Async b ()
+	 *
+	 *	Cleans up the resources used to interpret.
+	 */
+	cleanupErr(err) {
+		const self = this;
+		return Async.try(doM(function*() {
+			yield self.conn.rollback();
+
+			self.conn.close();
+
+			return Async.fail(err);
+		}))
+		//if an error occurs, replace it with
+		//the original error
+		.catch(err2 => Async.fail(err));
+	}
 }
 
 /**
- *	interpret :: IDBH -> Transaction a -> [Object] -> Promise a DBError
+ *	interpreter :: DBHManager -> IBus -> (Free f a -> Async a) -> Interpreter
  *
- *	Interprets a transaction into a promise, running each statement
- *	on the provided connection. Events that are emitted by the transaction
- *	are stored in the provided list.
+ *	Creates an interpreter constructor that can be used
+ *	with Free.createInterpreter.
  */
-function interpret(conn, trans, evs) {
-	const resume = n => x => interpret(conn, n(x), evs);
-
-	return trans.case({
-		'Free': x => x.case({
-			'Insert': (t,r,n) => conn.insert(t, r).then(resume(n)),
-			'Query': (s,b,n) => conn.query(s, ...b).then(resume(n)),
-			'Update': (t,r,n) => conn.update(t, r).then(resume(n)),
-			'Delete': (t,r,n) => conn.delete(t, r).then(resume(n)),
-			'Read': (t,i,n) => conn.read(t, i).then(resume(n)),
-			'Prepare': (s,n) => conn.prepare(s).then(resume(n)),
-			'Execute': (s,a,n) => s.execute(...a).then(resume(n)),
-			'ThrowE': e => Promise.reject(e),
-			'Emit': (e,d,n) => {evs.push([e,d]); return interpret(conn, n, evs)},
-			'LiftPromise': (p,n) => p.then(resume(n)),
-			'Skip': (n) => Promise.resolve(),
-			'Continue': (a,n) => interpret(conn, a, evs).then(resume(n)),
-		}),
-		'Return': v => Promise.resolve(v)
-	});
-}
-
-/**
- *	runTransaction :: IDBH -> IBus -> Transaction a -> Promise a DBError
- *
- *	Runs a transaction with the provided connection.
- *
- *	If the transaction completes successfully, we publish the events
- *	that it emits to the provided event bus.
- */
-function runTransaction(conn, bus, trans) {
-	//store events that are emitted by the transaction
-	//to possibly publish at end
-	const evs = [];
-
-	const res = doM(function*() {
-		//start a transaction on the database connection
-		yield conn.beginTransaction();
-		//interpret the transaction
-		const res = yield interpret(conn, trans, evs);
-		//commit the transaction
-		yield conn.commit();
-		//if all goes well, we return the final value
-		return Promise.resolve(res);
-	//otherwise, we will rollback and return the error!
-	}).catch((err) => conn.rollback().then(
-		() => Promise.reject(err),
-		() => Promise.reject(err)));
-
-	//if the transaction is successful, publish the events that were
-	//emitted during it onto the provided event bus
-	res.then(() => evs.forEach(([ev, data]) => bus.publish(ev, data)), e => null);
-
-	return res;
-}
-
-/**
- *	runWith :: DBHManager -> IBus -> Transaction a -> Promise a DBError
- *
- *	Runs a transaction using a provided database handle manager. A connection
- *	is retrieved from the manager, the transaction is ran on it,
- *	and the connection is closed (returned to connection pool).
- */
-exports.runWith = function(dbm, bus, trans) {
-	//get a connection from the pool
-	return dbm.getConnection().then((conn) => {
-		//run the transaction with the connection
-		return runTransaction(conn, bus, trans).then(
-			(val) => {
-				//close the connection & return result
-				conn.close();
-				return Promise.resolve(val);
-			},
-			(err) => {
-				//close the connection & return the error
-				conn.close();
-				return Promise.reject(err);
-			});
-	});
-}
+exports.interpreter = (dbm, bus = {publish(_, __) {}}) => exec => new Interpret(dbm, bus, exec);
 
 /**
  *	maybeSkip :: Transaction (Maybe a) -> Transaction a

@@ -1,7 +1,7 @@
 
 	<html>
 		<head>
-			<title>Transactional Documentation</title>
+			<title>Transactional DB Documentation</title>
 			<style>
 				.module-header, .module-description {
 					background-color: #EFEFEF;
@@ -135,7 +135,7 @@
 		</head>
 		<body>
 			<div class="project-header" id="top">
-			<h1>Transactional Documentation</h1>
+			<h1>Transactional DB Documentation</h1>
 			</div>
 			<div class="project-synopsis">
 			<h2>Module List</h2>
@@ -167,7 +167,7 @@
 			<li>
 				<a href="#doc.module.Transactional.DBHManager.func.runTransaction">
 					<b>runTransaction</b>
-				</a> <b>::</b> DBHManager &#8594; Transaction DBError Any &#8594; Promise Any DBError
+				</a> <b>::</b> DBHManager &#8594; (Async | Transaction) DBError a &#8594; Promise a DBError
 			</li>
 		
 			<li>
@@ -521,7 +521,7 @@
 			<li>
 				<a href="#doc.module.Transactional.Transaction.func.skip">
 					<b>skip</b>
-				</a> <b>::</b> () &#8594; Transaction ()
+				</a> <b>::</b> a &#8594; Transaction a
 			</li>
 		
 			<li>
@@ -537,27 +537,33 @@
 			</li>
 		
 			<li>
-				<a href="#doc.module.Transactional.Transaction.func.show">
-					<b>show</b>
-				</a> <b>::</b> Transaction a &#8594; IRetrieve &#8594; String
+				<a href="#doc.module.Transactional.Transaction.func.prepare">
+					<b>prepare</b>
+				</a> <b>::</b> Interpret &#8594; () &#8594; Async ()
 			</li>
 		
 			<li>
-				<a href="#doc.module.Transactional.Transaction.func.interpret">
-					<b>interpret</b>
-				</a> <b>::</b> IDBH &#8594; Transaction a &#8594; [Object] &#8594; Promise a DBError
+				<a href="#doc.module.Transactional.Transaction.func.map">
+					<b>map</b>
+				</a> <b>::</b> Interpret &#8594; Transaction a &#8594; (Async a, (a &#8594; Free f b) | Free f b)
 			</li>
 		
 			<li>
-				<a href="#doc.module.Transactional.Transaction.func.runTransaction">
-					<b>runTransaction</b>
-				</a> <b>::</b> IDBH &#8594; IBus &#8594; Transaction a &#8594; Promise a DBError
+				<a href="#doc.module.Transactional.Transaction.func.cleanup">
+					<b>cleanup</b>
+				</a> <b>::</b> Interpret &#8594; a &#8594; Async b a
 			</li>
 		
 			<li>
-				<a href="#doc.module.Transactional.Transaction.func.runWith">
-					<b>runWith</b>
-				</a> <b>::</b> DBHManager &#8594; IBus &#8594; Transaction a &#8594; Promise a DBError
+				<a href="#doc.module.Transactional.Transaction.func.cleanupErr">
+					<b>cleanupErr</b>
+				</a> <b>::</b> Interpret &#8594; b &#8594; Async b ()
+			</li>
+		
+			<li>
+				<a href="#doc.module.Transactional.Transaction.func.interpreter">
+					<b>interpreter</b>
+				</a> <b>::</b> DBHManager &#8594; IBus &#8594; (Free f a &#8594; Async a) &#8594; Interpreter
 			</li>
 		
 			<li>
@@ -851,14 +857,14 @@ already open.
 			<div class="function-description"
 			id="doc.module.Transactional.DBHManager.func.runTransaction">
 				<div class="function-name">
-					<b>runTransaction</b> <b>::</b> DBHManager &#8594; Transaction DBError Any &#8594; Promise Any DBError
+					<b>runTransaction</b> <b>::</b> DBHManager &#8594; (Async | Transaction) DBError a &#8594; Promise a DBError
 				</div>
 				<div class="function-desc">
 					
-Gets a connection from the connection pool,
-runs the provided transaction monad with it,
-and then closes the transaction. Returns a promise
-for the result of executing the transaction.
+Convenience method to run transactions. The transaction is a Free monad
+whose values can be of type Async or Transaction.<br><br>The transaction is interpreted to an Async, and the Async is then ran.<br><br>For most applications, this should not be used -- instead create and use your own
+composite interpreter including the transactional interpreter and run the
+resulting Async at the root of your application.
 				</div>
 			</div>
 		
@@ -1520,7 +1526,8 @@ Execute a prepared statement on the database.
 				</div>
 				<div class="function-desc">
 					
-Raise an error with the transaction. This will
+DEPRECATED: Use Async.fail instead and use
+Async.interpreter in your interpreter set.<br><br>Raise an error with the transaction. This will
 cause a rollback to happen.
 				</div>
 			</div>
@@ -1555,7 +1562,7 @@ transaction is the same as that returned by the promise.
 			<div class="function-description"
 			id="doc.module.Transactional.Transaction.func.skip">
 				<div class="function-name">
-					<b>skip</b> <b>::</b> () &#8594; Transaction ()
+					<b>skip</b> <b>::</b> a &#8594; Transaction a
 				</div>
 				<div class="function-desc">
 					
@@ -1593,60 +1600,58 @@ Lift a normal value into the Transaction context.
 			</div>
 		
 			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.show">
+			id="doc.module.Transactional.Transaction.func.prepare">
 				<div class="function-name">
-					<b>show</b> <b>::</b> Transaction a &#8594; IRetrieve &#8594; String
+					<b>prepare</b> <b>::</b> Interpret &#8594; () &#8594; Async ()
 				</div>
 				<div class="function-desc">
 					
-Returns a string representation of the
-transaction.<br><br>The optional IRetrieve object provides methods
-to mock retrieval of data. This allows testing
-basic logic, by returning different data for
-different queries. The object must provide methods
-for:
-insert: Gets insertId for (table,record)
-query: Gets [Record] for (sql,bindings)
-read: Gets (Maybe Record) for (table, id)
-execute: Gets [Record] for (stmt#, bindings)
+Prepares a context to interpret in.
 				</div>
 			</div>
 		
 			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.interpret">
+			id="doc.module.Transactional.Transaction.func.map">
 				<div class="function-name">
-					<b>interpret</b> <b>::</b> IDBH &#8594; Transaction a &#8594; [Object] &#8594; Promise a DBError
+					<b>map</b> <b>::</b> Interpret &#8594; Transaction a &#8594; (Async a, (a &#8594; Free f b) | Free f b)
 				</div>
 				<div class="function-desc">
 					
-Interprets a transaction into a promise, running each statement
-on the provided connection. Events that are emitted by the transaction
-are stored in the provided list.
+Maps the transaction to an Async
 				</div>
 			</div>
 		
 			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.runTransaction">
+			id="doc.module.Transactional.Transaction.func.cleanup">
 				<div class="function-name">
-					<b>runTransaction</b> <b>::</b> IDBH &#8594; IBus &#8594; Transaction a &#8594; Promise a DBError
+					<b>cleanup</b> <b>::</b> Interpret &#8594; a &#8594; Async b a
 				</div>
 				<div class="function-desc">
 					
-Runs a transaction with the provided connection.<br><br>If the transaction completes successfully, we publish the events
-that it emits to the provided event bus.
+Cleans up the resources used to interpret.
 				</div>
 			</div>
 		
 			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.runWith">
+			id="doc.module.Transactional.Transaction.func.cleanupErr">
 				<div class="function-name">
-					<b>runWith</b> <b>::</b> DBHManager &#8594; IBus &#8594; Transaction a &#8594; Promise a DBError
+					<b>cleanupErr</b> <b>::</b> Interpret &#8594; b &#8594; Async b ()
 				</div>
 				<div class="function-desc">
 					
-Runs a transaction using a provided database handle manager. A connection
-is retrieved from the manager, the transaction is ran on it,
-and the connection is closed (returned to connection pool).
+Cleans up the resources used to interpret.
+				</div>
+			</div>
+		
+			<div class="function-description"
+			id="doc.module.Transactional.Transaction.func.interpreter">
+				<div class="function-name">
+					<b>interpreter</b> <b>::</b> DBHManager &#8594; IBus &#8594; (Free f a &#8594; Async a) &#8594; Interpreter
+				</div>
+				<div class="function-desc">
+					
+Creates an interpreter constructor that can be used
+with Free.createInterpreter.
 				</div>
 			</div>
 		
@@ -2111,7 +2116,7 @@ handle.
 			</div>
 
 			<div class="footer">
-			This documentation was generated by <code>hmdoc</code> on <code>6/21/2017, 3:59:29 PM</code>
+			This documentation was generated by <code>hmdoc</code> on <code>6/27/2017, 11:01:10 AM</code>
 			</div>
 		</body>
 	</html>

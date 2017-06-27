@@ -52,7 +52,8 @@ exports.register('mysql', createManager);
 
 /* Export Transaction Monad Stuff */
 const transaction = require('./transaction_free.js');
-exports.runWith = transaction.runWith;
+
+exports.interpreter = transaction.interpreter;
 exports.maybeSkip = transaction.maybeSkip;
 exports.Transaction = transaction.Transaction;
 

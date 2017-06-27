@@ -1,6 +1,7 @@
 'use strict';
 
 const Rx = require('rx');
+const Async = require('monadic-js').Async;
 
 /**
  *	Transactional.PooledDBH
@@ -26,7 +27,7 @@ class PooledDBH {
 		this.base = base;
 		this.closed = false;
 		this.stmts = [];
-		this.closedError = () => Promise.reject(
+		this.closedError = () => Async.fail(
 			new Error("Cannot use closed pooled connection."));
 
 		//status stream
@@ -92,11 +93,11 @@ class PooledDBH {
 		}
 
 		//prepare statement and then
-		return this.base.prepare(sql).then((stmt) => {
+		return this.base.prepare(sql).bind((stmt) => {
 			//store the statement to cleanup eventually
 			this.stmts.push(stmt);
 			//return the statement
-			return Promise.resolve(stmt);
+			return Async.unit(stmt);
 		});
 	}
 
