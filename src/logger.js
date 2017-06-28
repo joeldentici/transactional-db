@@ -26,7 +26,7 @@ class LogDBH {
 	}
 
 	/**
-	 *	beginTransaction :: IDBH -> Promise () DBError
+	 *	beginTransaction :: IDBH -> Async DBError () 
 	 *
 	 *	Begins a transaction on the base IDBH.
 	 */
@@ -36,7 +36,7 @@ class LogDBH {
 	}
 
 	/**
-	 *	commit :: IDBH -> Promise () DBError
+	 *	commit :: IDBH -> Async DBError ()
 	 *
 	 *	Commits the transaction on the base IDBH
 	 */
@@ -46,7 +46,7 @@ class LogDBH {
 	}
 
 	/**
-	 *	rollback :: IDBH -> Promise () DBError
+	 *	rollback :: IDBH -> Async DBError ()
 	 *
 	 *	Rolls back the transaction on the base IDBH
 	 */
@@ -56,12 +56,12 @@ class LogDBH {
 	}
 
 	/**
-	 *	prepare :: IDBH -> String -> Promise IStatement ([Object] | int | ())
+	 *	prepare :: IDBH -> String -> Async DBError (IStatement ([Object] | int | ()))
 	 *
 	 *	Prepares a statement on the base IDBH.
 	 */
 	prepare(sql) {
-		return this.base.prepare(sql).then(makeWrapper(sql, this.media));
+		return this.base.prepare(sql).map(makeWrapper(sql, this.media));
 	}
 
 	/**
@@ -75,7 +75,7 @@ class LogDBH {
 	}
 
 	/**
-	 *	connect :: IDBH -> Promise () DBError
+	 *	connect :: IDBH -> Async DBError ()
 	 *
 	 *	Connects the base IDBH.
 	 */

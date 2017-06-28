@@ -23,11 +23,12 @@ class MySQLDBH {
 	 */
 	constructor(base) {
 		this.base = base;
+		//TODO: implement status events for mysql driver
 		this._status$ = Rx.Observable.just('Not Implemented').share();
 	}
 
 	/**
-	 *	beginTransaction :: MySQLDBH -> Promise () DBError
+	 *	beginTransaction :: MySQLDBH -> Async DBError ()
 	 *
 	 *	Begins a transaction. Returns a promise
 	 *	for the result of beginning the transaction.
@@ -37,7 +38,7 @@ class MySQLDBH {
 	}
 
 	/**
-	 *	commit :: MySQLDBH -> Promise () DBError
+	 *	commit :: MySQLDBH -> Async DBError ()
 	 *
 	 *	Commits the transaction. Returns a promise
 	 *	for the result.
@@ -47,7 +48,7 @@ class MySQLDBH {
 	}
 
 	/**
-	 *	rollback :: MySQLDBH -> Promise () DBError
+	 *	rollback :: MySQLDBH -> Async DBError ()
 	 *
 	 *	Rolls back the transaction. Returns a promise
 	 *	for when rollingback finishes.
@@ -57,7 +58,7 @@ class MySQLDBH {
 	}
 
 	/**
-	 *	prepare :: MySQLDBH -> String -> Promise IStatement ([Object] | int | ())
+	 *	prepare :: MySQLDBH -> String -> Async DBError (IStatement ([Object] | int | ()))
 	 *
 	 *	Prepares a statement to run on
 	 *	the database. Returns a promise
@@ -73,12 +74,11 @@ class MySQLDBH {
 	 *	Returns a stream of status events.
 	 */
 	get status$() {
-		//TODO: implement
 		return this._status$;
 	}
 
 	/**
-	 *	connect :: MySQLDBH -> Promise () DBError
+	 *	connect :: MySQLDBH -> Async DBError ()
 	 *
 	 *	Connects to the database. Returns
 	 *	a promise for the result of the

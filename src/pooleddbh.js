@@ -47,7 +47,7 @@ class PooledDBH {
 	}
 
 	/**
-	 *	beginTransaction :: IDBH -> Promise () DBError
+	 *	beginTransaction :: IDBH -> Async DBError ()
 	 *
 	 *	Begins a transaction on the base IDBH.
 	 */
@@ -59,7 +59,7 @@ class PooledDBH {
 	}
 
 	/**
-	 *	commit :: IDBH -> Promise () DBError
+	 *	commit :: IDBH -> Async DBError ()
 	 *
 	 *	Commits the transaction on the base IDBH
 	 */
@@ -71,7 +71,7 @@ class PooledDBH {
 	}
 
 	/**
-	 *	rollback :: IDBH -> Promise () DBError
+	 *	rollback :: IDBH -> Async DBError ()
 	 *
 	 *	Rolls back the transaction on the base IDBH
 	 */
@@ -83,7 +83,7 @@ class PooledDBH {
 	}
 
 	/**
-	 *	prepare :: IDBH -> String -> Promise IStatement ([Object] | int | ())
+	 *	prepare :: IDBH -> String -> Async DBError (IStatement ([Object] | int | ()))
 	 *
 	 *	Prepares a statement on the base IDBH.
 	 */
@@ -112,7 +112,7 @@ class PooledDBH {
 	}
 
 	/**
-	 *	connect :: IDBH -> Promise () DBError
+	 *	connect :: IDBH -> Async DBError ()
 	 *
 	 *	Connects the base IDBH.
 	 */

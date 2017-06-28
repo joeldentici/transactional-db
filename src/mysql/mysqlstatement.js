@@ -46,7 +46,7 @@ class MySQLStatement {
 
 
 	/**
-	 *	execute :: MySQLStatement ([Object] | int | ()) -> ...any -> Promise ([Object] | int | ()) DBError
+	 *	execute :: MySQLStatement ([Object] | int | ()) -> ...any -> Async DBError ([Object] | int | ()) 
 	 *
 	 *	Executes the prepared statement
 	 *	with the provided placeholder

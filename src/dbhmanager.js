@@ -48,7 +48,7 @@ class DBHManager {
 	}
 
 	/**
-	 *	createConnection :: DBHManager -> Promise RecordMapper DBError 
+	 *	createConnection :: DBHManager -> Async DBError RecordMapper  
 	 *
 	 *	Creates a new connection that is
 	 *	not from the connection pool. A promise
@@ -64,7 +64,7 @@ class DBHManager {
 	}
 
 	/**
-	 *	getConnection :: DBHManager -> Promise RecordMapper DBError
+	 *	getConnection :: DBHManager -> Async DBError RecordMapper
 	 *
 	 *	Returns a promise for a connection
 	 *	from the connection pool. The connection is

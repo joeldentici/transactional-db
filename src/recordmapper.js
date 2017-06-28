@@ -22,7 +22,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	insert :: RecordMapper -> string -> Map string any -> Promise int DBError
+	 *	insert :: RecordMapper -> string -> Map string any -> Async DBError int
 	 *
 	 *	Inserts a record into a
 	 *	table. Returns a promise
@@ -44,7 +44,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	update :: RecordMapper -> string -> Map string any -> Promise () DBError
+	 *	update :: RecordMapper -> string -> Map string any -> Async DBError () 
 	 *
 	 *	Updates the record in the table.
 	 *	Returns a promise with the result
@@ -67,7 +67,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	delete :: RecordMapper -> string -> (Map string any) | int -> Promise () DBError
+	 *	delete :: RecordMapper -> string -> (Map string any) | int -> Async DBError () 
 	 *
 	 *	Deletes the record from the table.
 	 *	Returns a promise for the result
@@ -80,7 +80,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	read :: RecordMapper -> String -> int -> Promise (Maybe (Map string any)) DBError
+	 *	read :: RecordMapper -> String -> int -> Async DBError (Maybe (Map string any))
 	 *
 	 *	Reads a record from the table.
 	 *	Returns a promise for the row
@@ -100,7 +100,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	query :: RecordMapper -> string -> ...any -> Promise ([Object] | int | ()) DBError
+	 *	query :: RecordMapper -> string -> ...any -> Async DBError ([Object] | int | ())
 	 *	Runs a sql query on the database,
 	 *	preparing a statement, bindings
 	 *	the bindings to placeholders,
@@ -121,7 +121,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	beginTransaction :: IDBH -> Promise () DBError
+	 *	beginTransaction :: IDBH -> Async DBError () 
 	 *
 	 *	Begins a transaction on the base IDBH.
 	 */
@@ -130,7 +130,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	commit :: IDBH -> Promise () DBError
+	 *	commit :: IDBH -> Async DBError () 
 	 *
 	 *	Commits the transaction on the base IDBH
 	 */
@@ -139,7 +139,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	rollback :: IDBH -> Promise () DBError
+	 *	rollback :: IDBH -> Async DBError () 
 	 *
 	 *	Rolls back the transaction on the base IDBH
 	 */
@@ -148,7 +148,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	prepare :: IDBH -> String -> Promise IStatement ([Object] | int | ())
+	 *	prepare :: IDBH -> String -> Async DBError (IStatement ([Object] | int | ()))
 	 *
 	 *	Prepares a statement on the base IDBH.
 	 */
@@ -166,7 +166,7 @@ class RecordMapper {
 	}
 
 	/**
-	 *	connect :: IDBH -> Promise () DBError
+	 *	connect :: IDBH -> Async DBError ()
 	 *
 	 *	Connects the base IDBH.
 	 */

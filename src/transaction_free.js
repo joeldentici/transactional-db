@@ -82,19 +82,6 @@ class Transaction {
 	}
 
 	/**
-	 *	throwE :: Error -> Transaction ()
-	 *
-	 *	DEPRECATED: Use Async.fail instead and use
-	 *	Async.interpreter in your interpreter set.
-	 *
-	 *	Raise an error with the transaction. This will
-	 *	cause a rollback to happen.
-	 */
-	static throwE(err) {
-		return Free.liftF(new ThrowE(err));
-	}
-
-	/**
 	 *	emit :: string -> Object -> Transaction ()
 	 *
 	 *	Emit an event. This is used to signal that an
@@ -104,44 +91,6 @@ class Transaction {
 	 */
 	static emit(ev, data) {
 		return Free.liftF(new Emit(ev, data, x => x));
-	}
-
-	/**
-	 *	liftPromise :: Promise a () -> Transaction a
-	 *
-	 *	Causes the transaction execution to suspend until
-	 *	the promise is fulfilled. The value returned by the
-	 *	transaction is the same as that returned by the promise.
-	 */
-	static liftPromise(prom) {
-		return Free.liftF(new LiftPromise(prom, x => x));
-	}
-
-	/**
-	 *	skip :: a -> Transaction a
-	 *
-	 *	Causes any further statements in the transaction to
-	 *	be skipped.
-	 */
-	static skip(val) {
-		return Free.liftF(new Skip(val));
-	}
-
-	/**
-	 *	continue :: Transaction a -> Transaction a
-	 *
-	 *	Marks a continuation point and then executes the
-	 *	provided transaction. When the provided transaction
-	 *	finishes executing, control is returned to the continuation
-	 *	point with the result of that transaction.
-	 *
-	 *	NOTE: This is not nested transactions. As far as the database
-	 *	is concerned, there is only a single transaction occurring. Most
-	 *	database engines don't even support nested transactions. This is
-	 *	strictly for control flow management.
-	 */
-	static continue(next) {
-		return Free.liftF(new Continue(next, x => x));
 	}
 
 	/**
@@ -274,21 +223,6 @@ class Execute extends CaseClass {
 	}
 }
 
-class ThrowE extends CaseClass {
-	constructor(err) {
-		super('ThrowE');
-		this.err = err;
-	}
-
-	map(f) {
-		return this;
-	}
-
-	doCase(fn) {
-		return fn(this.err);
-	}
-}
-
 class Emit extends CaseClass {
 	constructor(ev, data, next) {
 		super('Emit');
@@ -303,53 +237,6 @@ class Emit extends CaseClass {
 
 	doCase(fn) {
 		return fn(this.ev, this.data, this.next);
-	}
-}
-
-class Skip extends CaseClass {
-	constructor(val, next) {
-		super('Skip');
-		this.val = val;
-	}
-
-	map(f) {
-		return this;
-	}
-
-	doCase(fn) {
-		return fn(this.val);
-	}
-}
-
-class Continue extends CaseClass {
-	constructor(next, g) {
-		super('Continue');
-		this.next = next;
-		this.g = g;
-	}
-
-	map(f) {
-		return new Continue(this.next, x => f(this.g(x)));
-	}
-
-	doCase(fn) {
-		return fn(this.next, this.g);
-	}
-}
-
-class LiftPromise extends CaseClass {
-	constructor(prom, next) {
-		super('LiftPromise');
-		this.prom = prom;
-		this.next = next;
-	}
-
-	map(f) {
-		return new LiftPromise(this.prom, x => f(this.next(x)));
-	}
-
-	doCase(fn) {
-		return fn(this.prom, this.next);
 	}
 }
 
@@ -397,9 +284,6 @@ class Interpret {
 			'Prepare': (s,n) => [conn.prepare(s), n],
 			'Execute': (s,a,n) => [s.execute(...a), n],
 			'Emit': (e,d,n) => {events.push([e,d]); return [Async.unit(), n];},
-			'ThrowE': e => [Async.fail(e), null],
-			'Skip': (v,n) => [Async.unit(v), null],
-			'Continue': (n, n2) => [self.execute(n) , n2],
 			default: _ => null,
 		});
 	}

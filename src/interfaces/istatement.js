@@ -10,7 +10,7 @@
 
 class IStatement {
 	/**
-	 *	execute :: IStatement ([Object] | int | ()) -> ...any -> Promise ([Object] | int | ()) DBError
+	 *	execute :: IStatement ([Object] | int | ()) -> ...any -> Async DBError ([Object] | int | ())
 	 *
 	 *	Executes the prepared statement
 	 *	with the provided placeholder

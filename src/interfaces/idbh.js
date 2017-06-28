@@ -10,7 +10,7 @@
 
 class IDBH {
 	/**
-	 *	beginTransaction :: IDBH -> Promise () DBError
+	 *	beginTransaction :: IDBH -> Async DBError () 
 	 *
 	 *	Begins a transaction. Returns a promise
 	 *	for the result of beginning the transaction.
@@ -18,7 +18,7 @@ class IDBH {
 	beginTransaction() {}
 
 	/**
-	 *	commit :: IDBH -> Promise () DBError
+	 *	commit :: IDBH -> Async DBError ()
 	 *
 	 *	Commits the transaction. Returns a promise
 	 *	for the result.
@@ -26,7 +26,7 @@ class IDBH {
 	commit() {}
 
 	/**
-	 *	rollback :: IDBH -> Promise () DBError
+	 *	rollback :: IDBH -> Async DBError ()
 	 *
 	 *	Rolls back the transaction. Returns a promise
 	 *	for when rollingback finishes.
@@ -34,7 +34,7 @@ class IDBH {
 	rollback() {}
 
 	/**
-	 *	prepare :: IDBH -> String -> Promise IStatement ([Object] | int | ())
+	 *	prepare :: IDBH -> String -> Async DBError (IStatement ([Object] | int | ()))
 	 *
 	 *	Prepares a statement to run on
 	 *	the database. Returns a promise
@@ -56,7 +56,7 @@ class IDBH {
 	get status$() {}
 
 	/**
-	 *	connect :: IDBH -> Promise () DBError
+	 *	connect :: IDBH -> Async DBError ()
 	 *
 	 *	Connects to the database. Returns
 	 *	a promise for the result of the

@@ -155,13 +155,13 @@
 			<li>
 				<a href="#doc.module.Transactional.DBHManager.func.createConnection">
 					<b>createConnection</b>
-				</a> <b>::</b> DBHManager &#8594; Promise RecordMapper DBError
+				</a> <b>::</b> DBHManager &#8594; Async DBError RecordMapper
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.DBHManager.func.getConnection">
 					<b>getConnection</b>
-				</a> <b>::</b> DBHManager &#8594; Promise RecordMapper DBError
+				</a> <b>::</b> DBHManager &#8594; Async DBError RecordMapper
 			</li>
 		
 			<li>
@@ -212,25 +212,25 @@
 			<li>
 				<a href="#doc.module.Transactional.LogDBH.func.beginTransaction">
 					<b>beginTransaction</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.LogDBH.func.commit">
 					<b>commit</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.LogDBH.func.rollback">
 					<b>rollback</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.LogDBH.func.prepare">
 					<b>prepare</b>
-				</a> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+				</a> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 			</li>
 		
 			<li>
@@ -242,7 +242,7 @@
 			<li>
 				<a href="#doc.module.Transactional.LogDBH.func.connect">
 					<b>connect</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
@@ -329,25 +329,25 @@
 			<li>
 				<a href="#doc.module.Transactional.PooledDBH.func.beginTransaction">
 					<b>beginTransaction</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.PooledDBH.func.commit">
 					<b>commit</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.PooledDBH.func.rollback">
 					<b>rollback</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.PooledDBH.func.prepare">
 					<b>prepare</b>
-				</a> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+				</a> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 			</li>
 		
 			<li>
@@ -359,7 +359,7 @@
 			<li>
 				<a href="#doc.module.Transactional.PooledDBH.func.connect">
 					<b>connect</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
@@ -386,55 +386,55 @@
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.insert">
 					<b>insert</b>
-				</a> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Promise int DBError
+				</a> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Async DBError int
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.update">
 					<b>update</b>
-				</a> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Promise () DBError
+				</a> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.delete">
 					<b>delete</b>
-				</a> <b>::</b> RecordMapper &#8594; string &#8594; (Map string any) | int &#8594; Promise () DBError
+				</a> <b>::</b> RecordMapper &#8594; string &#8594; (Map string any) | int &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.read">
 					<b>read</b>
-				</a> <b>::</b> RecordMapper &#8594; String &#8594; int &#8594; Promise (Maybe (Map string any)) DBError
+				</a> <b>::</b> RecordMapper &#8594; String &#8594; int &#8594; Async DBError (Maybe (Map string any))
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.query">
 					<b>query</b>
-				</a> <b>::</b> RecordMapper &#8594; string &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+				</a> <b>::</b> RecordMapper &#8594; string &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.beginTransaction">
 					<b>beginTransaction</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.commit">
 					<b>commit</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.rollback">
 					<b>rollback</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.prepare">
 					<b>prepare</b>
-				</a> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+				</a> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 			</li>
 		
 			<li>
@@ -446,7 +446,7 @@
 			<li>
 				<a href="#doc.module.Transactional.RecordMapper.func.connect">
 					<b>connect</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
@@ -507,33 +507,9 @@
 			</li>
 		
 			<li>
-				<a href="#doc.module.Transactional.Transaction.func.throwE">
-					<b>throwE</b>
-				</a> <b>::</b> Error &#8594; Transaction ()
-			</li>
-		
-			<li>
 				<a href="#doc.module.Transactional.Transaction.func.emit">
 					<b>emit</b>
 				</a> <b>::</b> string &#8594; Object &#8594; Transaction ()
-			</li>
-		
-			<li>
-				<a href="#doc.module.Transactional.Transaction.func.liftPromise">
-					<b>liftPromise</b>
-				</a> <b>::</b> Promise a () &#8594; Transaction a
-			</li>
-		
-			<li>
-				<a href="#doc.module.Transactional.Transaction.func.skip">
-					<b>skip</b>
-				</a> <b>::</b> a &#8594; Transaction a
-			</li>
-		
-			<li>
-				<a href="#doc.module.Transactional.Transaction.func.continue">
-					<b>continue</b>
-				</a> <b>::</b> Transaction a &#8594; Transaction a
 			</li>
 		
 			<li>
@@ -632,25 +608,25 @@
 			<li>
 				<a href="#doc.module.Transactional.IDBH.func.beginTransaction">
 					<b>beginTransaction</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.IDBH.func.commit">
 					<b>commit</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.IDBH.func.rollback">
 					<b>rollback</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.IDBH.func.prepare">
 					<b>prepare</b>
-				</a> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+				</a> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 			</li>
 		
 			<li>
@@ -662,7 +638,7 @@
 			<li>
 				<a href="#doc.module.Transactional.IDBH.func.connect">
 					<b>connect</b>
-				</a> <b>::</b> IDBH &#8594; Promise () DBError
+				</a> <b>::</b> IDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
@@ -683,7 +659,7 @@
 			<li>
 				<a href="#doc.module.Transactional.IStatement.func.execute">
 					<b>execute</b>
-				</a> <b>::</b> IStatement ([Object] | int | ()) &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+				</a> <b>::</b> IStatement ([Object] | int | ()) &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 			</li>
 		
 			<li>
@@ -710,25 +686,25 @@
 			<li>
 				<a href="#doc.module.Transactional.MySQLDBH.func.beginTransaction">
 					<b>beginTransaction</b>
-				</a> <b>::</b> MySQLDBH &#8594; Promise () DBError
+				</a> <b>::</b> MySQLDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.MySQLDBH.func.commit">
 					<b>commit</b>
-				</a> <b>::</b> MySQLDBH &#8594; Promise () DBError
+				</a> <b>::</b> MySQLDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.MySQLDBH.func.rollback">
 					<b>rollback</b>
-				</a> <b>::</b> MySQLDBH &#8594; Promise () DBError
+				</a> <b>::</b> MySQLDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
 				<a href="#doc.module.Transactional.MySQLDBH.func.prepare">
 					<b>prepare</b>
-				</a> <b>::</b> MySQLDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+				</a> <b>::</b> MySQLDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 			</li>
 		
 			<li>
@@ -740,7 +716,7 @@
 			<li>
 				<a href="#doc.module.Transactional.MySQLDBH.func.connect">
 					<b>connect</b>
-				</a> <b>::</b> MySQLDBH &#8594; Promise () DBError
+				</a> <b>::</b> MySQLDBH &#8594; Async DBError ()
 			</li>
 		
 			<li>
@@ -779,7 +755,7 @@
 			<li>
 				<a href="#doc.module.Transactional.MySQLStatement.func.execute">
 					<b>execute</b>
-				</a> <b>::</b> MySQLStatement ([Object] | int | ()) &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+				</a> <b>::</b> MySQLStatement ([Object] | int | ()) &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 			</li>
 		
 			<li>
@@ -836,7 +812,7 @@ fromPool provides.
 			<div class="function-description"
 			id="doc.module.Transactional.DBHManager.func.createConnection">
 				<div class="function-name">
-					<b>createConnection</b> <b>::</b> DBHManager &#8594; Promise RecordMapper DBError
+					<b>createConnection</b> <b>::</b> DBHManager &#8594; Async DBError RecordMapper
 				</div>
 				<div class="function-desc">
 					
@@ -850,7 +826,7 @@ the connection.
 			<div class="function-description"
 			id="doc.module.Transactional.DBHManager.func.getConnection">
 				<div class="function-name">
-					<b>getConnection</b> <b>::</b> DBHManager &#8594; Promise RecordMapper DBError
+					<b>getConnection</b> <b>::</b> DBHManager &#8594; Async DBError RecordMapper
 				</div>
 				<div class="function-desc">
 					
@@ -959,7 +935,7 @@ the base connection.
 			<div class="function-description"
 			id="doc.module.Transactional.LogDBH.func.beginTransaction">
 				<div class="function-name">
-					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -970,7 +946,7 @@ Begins a transaction on the base IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.LogDBH.func.commit">
 				<div class="function-name">
-					<b>commit</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>commit</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -981,7 +957,7 @@ Commits the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.LogDBH.func.rollback">
 				<div class="function-name">
-					<b>rollback</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>rollback</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -992,7 +968,7 @@ Rolls back the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.LogDBH.func.prepare">
 				<div class="function-name">
-					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 				</div>
 				<div class="function-desc">
 					
@@ -1015,7 +991,7 @@ connection and underlying IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.LogDBH.func.connect">
 				<div class="function-name">
-					<b>connect</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>connect</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1189,7 +1165,7 @@ an underlying dbh.
 			<div class="function-description"
 			id="doc.module.Transactional.PooledDBH.func.beginTransaction">
 				<div class="function-name">
-					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1200,7 +1176,7 @@ Begins a transaction on the base IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.PooledDBH.func.commit">
 				<div class="function-name">
-					<b>commit</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>commit</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1211,7 +1187,7 @@ Commits the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.PooledDBH.func.rollback">
 				<div class="function-name">
-					<b>rollback</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>rollback</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1222,7 +1198,7 @@ Rolls back the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.PooledDBH.func.prepare">
 				<div class="function-name">
-					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 				</div>
 				<div class="function-desc">
 					
@@ -1245,7 +1221,7 @@ connection and underlying IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.PooledDBH.func.connect">
 				<div class="function-name">
-					<b>connect</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>connect</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1297,7 +1273,7 @@ Extends the underlying IDBH with additional functionality.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.insert">
 				<div class="function-name">
-					<b>insert</b> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Promise int DBError
+					<b>insert</b> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Async DBError int
 				</div>
 				<div class="function-desc">
 					
@@ -1310,7 +1286,7 @@ with the result of the insertion.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.update">
 				<div class="function-name">
-					<b>update</b> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Promise () DBError
+					<b>update</b> <b>::</b> RecordMapper &#8594; string &#8594; Map string any &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1323,7 +1299,7 @@ of the update.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.delete">
 				<div class="function-name">
-					<b>delete</b> <b>::</b> RecordMapper &#8594; string &#8594; (Map string any) | int &#8594; Promise () DBError
+					<b>delete</b> <b>::</b> RecordMapper &#8594; string &#8594; (Map string any) | int &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1336,7 +1312,7 @@ of the deletion.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.read">
 				<div class="function-name">
-					<b>read</b> <b>::</b> RecordMapper &#8594; String &#8594; int &#8594; Promise (Maybe (Map string any)) DBError
+					<b>read</b> <b>::</b> RecordMapper &#8594; String &#8594; int &#8594; Async DBError (Maybe (Map string any))
 				</div>
 				<div class="function-desc">
 					
@@ -1349,7 +1325,7 @@ read from the table.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.query">
 				<div class="function-name">
-					<b>query</b> <b>::</b> RecordMapper &#8594; string &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+					<b>query</b> <b>::</b> RecordMapper &#8594; string &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 				</div>
 				<div class="function-desc">
 					Runs a sql query on the database,
@@ -1364,7 +1340,7 @@ a statement once.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.beginTransaction">
 				<div class="function-name">
-					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1375,7 +1351,7 @@ Begins a transaction on the base IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.commit">
 				<div class="function-name">
-					<b>commit</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>commit</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1386,7 +1362,7 @@ Commits the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.rollback">
 				<div class="function-name">
-					<b>rollback</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>rollback</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1397,7 +1373,7 @@ Rolls back the transaction on the base IDBH
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.prepare">
 				<div class="function-name">
-					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 				</div>
 				<div class="function-desc">
 					
@@ -1419,7 +1395,7 @@ Returns a stream of status events from the base IDBH.
 			<div class="function-description"
 			id="doc.module.Transactional.RecordMapper.func.connect">
 				<div class="function-name">
-					<b>connect</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>connect</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1540,19 +1516,6 @@ Execute a prepared statement on the database.
 			</div>
 		
 			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.throwE">
-				<div class="function-name">
-					<b>throwE</b> <b>::</b> Error &#8594; Transaction ()
-				</div>
-				<div class="function-desc">
-					
-DEPRECATED: Use Async.fail instead and use
-Async.interpreter in your interpreter set.<br><br>Raise an error with the transaction. This will
-cause a rollback to happen.
-				</div>
-			</div>
-		
-			<div class="function-description"
 			id="doc.module.Transactional.Transaction.func.emit">
 				<div class="function-name">
 					<b>emit</b> <b>::</b> string &#8594; Object &#8594; Transaction ()
@@ -1563,48 +1526,6 @@ Emit an event. This is used to signal that an
 event occurred while executing the transaction. The
 interpreter will automatically publish these events
 to a provided event bus.
-				</div>
-			</div>
-		
-			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.liftPromise">
-				<div class="function-name">
-					<b>liftPromise</b> <b>::</b> Promise a () &#8594; Transaction a
-				</div>
-				<div class="function-desc">
-					
-Causes the transaction execution to suspend until
-the promise is fulfilled. The value returned by the
-transaction is the same as that returned by the promise.
-				</div>
-			</div>
-		
-			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.skip">
-				<div class="function-name">
-					<b>skip</b> <b>::</b> a &#8594; Transaction a
-				</div>
-				<div class="function-desc">
-					
-Causes any further statements in the transaction to
-be skipped.
-				</div>
-			</div>
-		
-			<div class="function-description"
-			id="doc.module.Transactional.Transaction.func.continue">
-				<div class="function-name">
-					<b>continue</b> <b>::</b> Transaction a &#8594; Transaction a
-				</div>
-				<div class="function-desc">
-					
-Marks a continuation point and then executes the
-provided transaction. When the provided transaction
-finishes executing, control is returned to the continuation
-point with the result of that transaction.<br><br>NOTE: This is not nested transactions. As far as the database
-is concerned, there is only a single transaction occurring. Most
-database engines don't even support nested transactions. This is
-strictly for control flow management.
 				</div>
 			</div>
 		
@@ -1798,7 +1719,7 @@ a relational database.
 			<div class="function-description"
 			id="doc.module.Transactional.IDBH.func.beginTransaction">
 				<div class="function-name">
-					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>beginTransaction</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1810,7 +1731,7 @@ for the result of beginning the transaction.
 			<div class="function-description"
 			id="doc.module.Transactional.IDBH.func.commit">
 				<div class="function-name">
-					<b>commit</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>commit</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1822,7 +1743,7 @@ for the result.
 			<div class="function-description"
 			id="doc.module.Transactional.IDBH.func.rollback">
 				<div class="function-name">
-					<b>rollback</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>rollback</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1834,7 +1755,7 @@ for when rollingback finishes.
 			<div class="function-description"
 			id="doc.module.Transactional.IDBH.func.prepare">
 				<div class="function-name">
-					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+					<b>prepare</b> <b>::</b> IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 				</div>
 				<div class="function-desc">
 					
@@ -1862,7 +1783,7 @@ method is ended.
 			<div class="function-description"
 			id="doc.module.Transactional.IDBH.func.connect">
 				<div class="function-name">
-					<b>connect</b> <b>::</b> IDBH &#8594; Promise () DBError
+					<b>connect</b> <b>::</b> IDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1905,7 +1826,7 @@ a relational database.
 			<div class="function-description"
 			id="doc.module.Transactional.IStatement.func.execute">
 				<div class="function-name">
-					<b>execute</b> <b>::</b> IStatement ([Object] | int | ()) &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+					<b>execute</b> <b>::</b> IStatement ([Object] | int | ()) &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 				</div>
 				<div class="function-desc">
 					
@@ -1966,7 +1887,7 @@ Wrap the connection
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLDBH.func.beginTransaction">
 				<div class="function-name">
-					<b>beginTransaction</b> <b>::</b> MySQLDBH &#8594; Promise () DBError
+					<b>beginTransaction</b> <b>::</b> MySQLDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1978,7 +1899,7 @@ for the result of beginning the transaction.
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLDBH.func.commit">
 				<div class="function-name">
-					<b>commit</b> <b>::</b> MySQLDBH &#8594; Promise () DBError
+					<b>commit</b> <b>::</b> MySQLDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -1990,7 +1911,7 @@ for the result.
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLDBH.func.rollback">
 				<div class="function-name">
-					<b>rollback</b> <b>::</b> MySQLDBH &#8594; Promise () DBError
+					<b>rollback</b> <b>::</b> MySQLDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -2002,7 +1923,7 @@ for when rollingback finishes.
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLDBH.func.prepare">
 				<div class="function-name">
-					<b>prepare</b> <b>::</b> MySQLDBH &#8594; String &#8594; Promise IStatement ([Object] | int | ())
+					<b>prepare</b> <b>::</b> MySQLDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 				</div>
 				<div class="function-desc">
 					
@@ -2026,7 +1947,7 @@ Returns a stream of status events.
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLDBH.func.connect">
 				<div class="function-name">
-					<b>connect</b> <b>::</b> MySQLDBH &#8594; Promise () DBError
+					<b>connect</b> <b>::</b> MySQLDBH &#8594; Async DBError ()
 				</div>
 				<div class="function-desc">
 					
@@ -2102,7 +2023,7 @@ Construct a new MySQLStatement.
 			<div class="function-description"
 			id="doc.module.Transactional.MySQLStatement.func.execute">
 				<div class="function-name">
-					<b>execute</b> <b>::</b> MySQLStatement ([Object] | int | ()) &#8594; ...any &#8594; Promise ([Object] | int | ()) DBError
+					<b>execute</b> <b>::</b> MySQLStatement ([Object] | int | ()) &#8594; ...any &#8594; Async DBError ([Object] | int | ())
 				</div>
 				<div class="function-desc">
 					
@@ -2136,7 +2057,7 @@ handle.
 			</div>
 
 			<div class="footer">
-			This documentation was generated by <code>hmdoc</code> on <code>6/27/2017, 11:34:24 PM</code>
+			This documentation was generated by <code>hmdoc</code> on <code>6/28/2017, 2:14:30 PM</code>
 			</div>
 		</body>
 	</html>
