@@ -289,7 +289,7 @@ class Interpret {
 	}
 
 	/**
-	 *	cleanup :: Interpret -> a -> Async b a
+	 *	cleanup :: Interpret -> a -> Async c ()
 	 *
 	 *	Cleans up the resources used to interpret.
 	 */
@@ -303,27 +303,24 @@ class Interpret {
 
 			self.events.forEach(([e,d]) => self.bus.publish(e, d));
 
-			return Async.unit(result);
+			return Async.unit();
 		});
 	}
 
 	/**
-	 *	cleanupErr :: Interpret -> b -> Async b ()
+	 *	cleanupErr :: Interpret -> b -> Async c ()
 	 *
 	 *	Cleans up the resources used to interpret.
 	 */
 	cleanupErr(err) {
 		const self = this;
-		return Async.try(doM(function*() {
+		return doM(function*() {
 			yield self.conn.rollback();
 
 			self.conn.close();
 
-			return Async.fail(err);
-		}))
-		//if an error occurs, replace it with
-		//the original error
-		.catch(err2 => Async.fail(err));
+			return Async.unit();
+		});
 	}
 }
 
