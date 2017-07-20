@@ -1,0 +1,303 @@
+const {ConcurrentFree: F, Maybe, Async} = require('monadic-js');
+const CaseClass = require('js-helpers').CaseClass;
+
+/**
+ *	Transactional.Transaction
+ *	written by Joel Dentici
+ *	on 6/20/2017
+ *
+ *	Provides a DSL to compose and execute database
+ *	transactions. This comes in the form of a Free monad
+ *	over a (rather large) functor defined below, along with
+ *	an interpreter that translates monadic values into calls
+ *	in the library.
+ *
+ *	This is the preferred way to use this library and produces
+ *	much cleaner code than directly using the library functions
+ *	to interact with your database.
+ */
+class Transaction {
+	/**
+	 *	query :: string -> ...any -> Transaction ([Object] | int | ())
+	 *
+	 *	Execute a query on the database.
+	 */
+	static query(sql, ...bindings) {
+		return F.liftF(new Query(sql, ...bindings));
+	}
+
+	/**
+	 *	insert :: string -> Map string any -> Transaction int
+	 *
+	 *	Insert a row into a table.
+	 */
+	static insert(table, record) {
+		return F.liftF(new Insert(table, record));
+	}
+
+	/**
+	 *	update :: string -> Map string any -> Transaction ()
+	 *
+	 *	Update a row in a table.
+	 */
+	static update(table, record) {
+		return F.liftF(new Update(table, record));
+	}
+
+	/**
+	 *	delete :: string -> Map string any | int -> Transaction ()
+	 *
+	 *	Delete a row in a table.
+	 */
+	static delete(table, record) {
+		return F.liftF(new Delete(table, record));
+	}
+
+	/**
+	 *	read :: string -> int -> Transaction (Maybe (Map string any))
+	 *
+	 *	Read a row from a table.
+	 */
+	static read(table, id) {
+		return F.liftF(new Read(table, id));
+	}
+
+	/**
+	 *	prepare :: string -> Transaction IStatement
+	 *
+	 *	Prepare a statement for execution on the database.
+	 */
+	static prepare(stmt) {
+		return F.liftF(new Prepare(stmt));
+	}
+
+	/**
+	 *	execute :: IStatement -> ...any -> Transaction ([Object] | int | ())
+	 *
+	 *	Execute a prepared statement on the database.
+	 */
+	static execute(stmt, ...args) {
+		return F.liftF(new Execute(stmt, args));
+	}
+
+	/**
+	 *	emit :: string -> Object -> Transaction ()
+	 *
+	 *	Emit an event. This is used to signal that an
+	 *	event occurred while executing the transaction. The
+	 *	interpreter will automatically publish these events
+	 *	to a provided event bus.
+	 */
+	static emit(ev, data) {
+		return F.liftF(new Emit(ev, data));
+	}
+
+	/**
+	 *	of/unit :: a -> Transaction a
+	 *
+	 *	Lift a normal value into the Transaction context.
+	 */
+	static of(v) {
+		return F.of(v);
+	}
+
+	static unit(v) {
+		return Transaction.of(v);
+	}
+}
+exports.Transaction = Transaction;
+
+class Query extends CaseClass {
+	constructor(sql, ...bindings) {
+		super('Query');
+		this.sql = sql;
+		this.bindings = bindings;
+	}
+
+	doCase(fn) {
+		return fn(this.sql, this.bindings);
+	}
+}
+
+class Insert extends CaseClass {
+	constructor(table, record) {
+		super('Insert');
+		this.table = table;
+		this.record = record;
+	}
+
+	doCase(fn) {
+		return fn(this.table, this.record);
+	}
+}
+
+class Update extends CaseClass {
+	constructor(table, record) {
+		super('Update');
+		this.table = table;
+		this.record = record;
+	}
+
+	doCase(fn) {
+		return fn(this.table, this.record);
+	}
+}
+
+class Delete extends CaseClass {
+	constructor(table, record) {
+		super('Delete');
+		this.table = table;
+		this.record = record;
+	}
+
+	doCase(fn) {
+		return fn(this.table, this.record);
+	}
+}
+
+class Read extends CaseClass {
+	constructor(table, id) {
+		super('Read');
+		this.table = table;
+		this.id = id;
+	}
+
+	doCase(fn) {
+		return fn(this.table, this.id);
+	}
+}
+
+class Prepare extends CaseClass {
+	constructor(stmt, g) {
+		super('Prepare');
+		this.stmt = stmt;
+	}
+
+	doCase(fn) {
+		return fn(this.stmt);
+	}
+}
+
+class Execute extends CaseClass {
+	constructor(stmt, args) {
+		super('Execute');
+		this.stmt = stmt;
+		this.args = args;
+	}
+
+	doCase(fn) {
+		return fn(this.stmt, this.args);
+	}
+}
+
+class Emit extends CaseClass {
+	constructor(ev, data) {
+		super('Emit');
+		this.ev = ev;
+		this.data = data;
+	}
+
+	doCase(fn) {
+		return fn(this.ev, this.data);
+	}
+}
+
+class Interpret {
+	constructor(dbm, bus) {
+		this.dbm = dbm;
+		this.bus = bus;
+	}
+
+	/**
+	 *	setup :: Interpret -> () -> Async ()
+	 *
+	 *	Prepares a context to interpret in.
+	 */
+	setup() {
+		const self = this;
+
+		return do Async {
+			conn <- self.dbm.getConnection()
+
+			do! conn.beginTransaction()
+
+			self.events = []
+
+			self.conn = conn
+
+			return undefined
+		};
+	}
+
+	/**
+	 *	map :: Interpret -> Transaction a -> (Async a, (a -> Free f b) | Free f b)
+	 *
+	 *	Maps the transaction to an Async
+	 */
+	transform(trans) {
+		const self = this;
+		const conn = this.conn;
+		const events = this.events;
+		return trans.case({
+			'Insert': (t,r) => conn.insert(t, r),
+			'Query': (s,b) => conn.query(s, ...b),
+			'Update': (t,r) => conn.update(t, r),
+			'Delete': (t,r) => conn.read(t, r),
+			'Read': (t,i) => conn.read(t, i),
+			'Prepare': (s) => conn.prepare(s),
+			'Execute': (s,a) => s.execute(...a),
+			'Emit': (e,d) => {
+				events.push([e,d]); 
+				return Async.of()
+			},
+			default: _ => null,
+		});
+	}
+
+	/**
+	 *	cleanupSuccess :: Interpret -> a -> Async c ()
+	 *
+	 *	Cleans up the resources used to interpret.
+	 */
+	cleanupSuccess(result) {
+		const self = this;
+
+		return do Async {
+			do! self.conn.commit()
+
+			self.conn.close()
+
+			self.events.forEach(([e, d]) => self.bus.publish(e, d))
+
+			return undefined
+		};
+	}
+
+	/**
+	 *	cleanupFail :: Interpret -> b -> Async c ()
+	 *
+	 *	Cleans up the resources used to interpret.
+	 */
+	cleanupFail(err) {
+		const self = this;
+
+		return do Async {
+			do! self.conn.rollback()
+
+			self.conn.close()
+
+			return undefined
+		};
+	}
+}
+
+/**
+ *	interpreter :: (DBHManager, IBus) -> () -> Interpreter
+ *
+ *	Creates an interpreter constructor that can be used
+ *	with ConcurrentFree.interpret.
+ *
+ *	This interprets to Async and runs queries/statements in a
+ *	transaction.
+ */
+exports.interpreter = (dbm, bus = {publish(_, __) {}}) => () => new Interpret(dbm, bus);

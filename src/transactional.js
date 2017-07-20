@@ -1,4 +1,6 @@
 'use strict';
+const monadic = require('monadic-js');
+monadic.loadDo('.ejs');
 
 const {nolog} = require('./logger.js');
 const DBHManager = require('./dbhmanager.js');
@@ -51,10 +53,9 @@ exports.create = function(driverName, maxConnections, options, logger = nolog) {
 exports.register('mysql', createManager);
 
 /* Export Transaction Monad Stuff */
-const transaction = require('./transaction_free.js');
+const transaction = require('./transaction_free.ejs');
 
 exports.interpreter = transaction.interpreter;
-exports.maybeSkip = transaction.maybeSkip;
 exports.Transaction = transaction.Transaction;
 
 /* Export Logger Stuff */
