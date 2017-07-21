@@ -250,7 +250,7 @@ class Interpret {
 				events.push([e,d]); 
 				return Async.of()
 			},
-			default: _ => null,
+			default: () => {},
 		});
 	}
 
