@@ -10,7 +10,7 @@
   ],
   "main": "src/transactional.js",
   "scripts": {
-    "document": "hmdoc 'Transactional DB' src > documentation.html"
+    "document": "hmdoc 'Transactional DB' src markdown > documentation.md"
   },
   "dependencies": {
     "mysql": "^2.10.2",
