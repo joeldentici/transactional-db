@@ -435,12 +435,6 @@ in the library.
 This is the preferred way to use this library and produces
 much cleaner code than directly using the library functions
 to interact with your database.
-#### cleanupFail :: Interpret &#8594; b &#8594; Async c ()
-
-Cleans up the resources used to interpret.
-#### cleanupSuccess :: Interpret &#8594; a &#8594; Async c ()
-
-Cleans up the resources used to interpret.
 #### delete :: string &#8594; Map string any | int &#8594; Transaction ()
 
 Delete a row in a table.
@@ -463,9 +457,6 @@ with ConcurrentFree.interpret.
 
 This interprets to Async and runs queries/statements in a
 transaction.
-#### map :: Interpret &#8594; Transaction a &#8594; (Async a, (a &#8594; Free f b) | Free f b)
-
-Maps the transaction to an Async
 #### of/unit :: a &#8594; Transaction a
 
 Lift a normal value into the Transaction context.
@@ -478,9 +469,6 @@ Execute a query on the database.
 #### read :: string &#8594; int &#8594; Transaction (Maybe (Map string any))
 
 Read a row from a table.
-#### setup :: Interpret &#8594; () &#8594; Async ()
-
-Prepares a context to interpret in.
 #### update :: string &#8594; Map string any &#8594; Transaction ()
 
 Update a row in a table.

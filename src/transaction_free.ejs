@@ -208,11 +208,6 @@ class Interpret {
 		this.bus = bus;
 	}
 
-	/**
-	 *	setup :: Interpret -> () -> Async ()
-	 *
-	 *	Prepares a context to interpret in.
-	 */
 	setup() {
 		const self = this;
 
@@ -229,11 +224,6 @@ class Interpret {
 		};
 	}
 
-	/**
-	 *	map :: Interpret -> Transaction a -> (Async a, (a -> Free f b) | Free f b)
-	 *
-	 *	Maps the transaction to an Async
-	 */
 	transform(trans) {
 		const self = this;
 		const conn = this.conn;
@@ -254,11 +244,6 @@ class Interpret {
 		});
 	}
 
-	/**
-	 *	cleanupSuccess :: Interpret -> a -> Async c ()
-	 *
-	 *	Cleans up the resources used to interpret.
-	 */
 	cleanupSuccess(result) {
 		const self = this;
 
@@ -273,11 +258,6 @@ class Interpret {
 		};
 	}
 
-	/**
-	 *	cleanupFail :: Interpret -> b -> Async c ()
-	 *
-	 *	Cleans up the resources used to interpret.
-	 */
 	cleanupFail(err) {
 		const self = this;
 
