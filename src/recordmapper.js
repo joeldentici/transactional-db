@@ -1,6 +1,5 @@
 'use strict';
 
-const {objectSplit} = require('js-helpers');
 const {Maybe, Utility, Async} = require('monadic-js');
 const doM = Utility.doM;
 
@@ -182,6 +181,20 @@ class RecordMapper {
 	close() {
 		this.base.close();
 	}
+}
+
+
+/**
+ *	objectSplit :: Map any any -> [[any], [any]]
+ *	
+ *	Splits an object into lists of its keys
+ *	and values.
+ */
+const objectSplit = function(obj) {
+	const keys = Object.keys(obj);
+	const vals = keys.map(k => obj[k]);
+
+	return [keys, vals];
 }
 
 module.exports = RecordMapper;

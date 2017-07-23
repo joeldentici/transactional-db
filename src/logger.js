@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const {zip} = require('js-helpers');
+const {zip} = require('monadic-js').Utility;
 
 /**
  *	Transactional.LogDBH

@@ -1,6 +1,5 @@
 'use strict';
 
-const {promisfy} = require('js-helpers');
 const Async = require('monadic-js').Async;
 
 /**

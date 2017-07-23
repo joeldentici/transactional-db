@@ -4,7 +4,6 @@ const mysql = require('mysql');
 
 const Async = require('monadic-js').Async;
 
-const {promisfy} = require('js-helpers');
 const MySQLStatement = require('./mysqlstatement.js');
 const Rx = require('rx');
 
