@@ -52,7 +52,7 @@ class RecordMapper {
 	 */
 	update(table, record) {
 		//split record into k-v pairs
-		const [keys, vals] = split(record);
+		const [keys, vals] = objectSplit(record);
 
 		//set statements for each pair
 		const setters = keys.map((key) => key + ' = ?').join(',');

@@ -3,7 +3,7 @@
 const PooledDBH = require('./pooleddbh.js');
 const RecordMapper = require('./recordmapper.js');
 const {interpreter} = require('./transaction_free.ejs');
-const {Async, ConcurrentFree} = require('monadic-js');
+const {Async, ConcurrentFree: Free} = require('monadic-js');
 
 /**
  *	Transactional.DBHManager
