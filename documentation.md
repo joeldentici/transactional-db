@@ -97,7 +97,8 @@ fromPool provides.
 Convenience method to interpret transactions. The transaction is a Free monad
 whose values can be of type Async or Transaction.
 
-The transaction is interpreted to an Async.
+The transaction is interpreted to an Async. You can use Free.Control primitives
+as well as Transaction instructions.
 
 For most applications, this should not be used -- instead create and use your own
 composite interpreter including the transactional interpreter and run the
@@ -392,6 +393,10 @@ with the result of the insertion.
 #### new :: IDBH &#8594; RecordMapper
 
 Extends the underlying IDBH with additional functionality.
+#### objectSplit :: Map any any &#8594; [[any], [any]]
+
+Splits an object into lists of its keys
+and values.
 #### prepare :: IDBH &#8594; String &#8594; Async DBError (IStatement ([Object] | int | ()))
 
 Prepares a statement on the base IDBH.
