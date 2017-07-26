@@ -119,3 +119,6 @@ exports.createManager = function(poolSize, options) {
 		shutdown: () => pool.end()
 	};
 }
+
+exports.MySQLDBH = MySQLDBH;
+exports.MySQLStatement = MySQLStatement;

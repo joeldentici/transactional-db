@@ -75,7 +75,7 @@ class RecordMapper {
 	delete(table, record) {
 		return this.query(
 			`DELETE FROM ${table} WHERE id = ?`,
-			typeof !isNaN(Number.parseInt(record)) ? record : record.id);
+			typeof record === 'object' ? record.id : record);
 	}
 
 	/**

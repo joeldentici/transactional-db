@@ -232,7 +232,7 @@ class Interpret {
 			'Insert': (t,r) => conn.insert(t, r),
 			'Query': (s,b) => conn.query(s, ...b),
 			'Update': (t,r) => conn.update(t, r),
-			'Delete': (t,r) => conn.read(t, r),
+			'Delete': (t,r) => conn.delete(t, r),
 			'Read': (t,i) => conn.read(t, i),
 			'Prepare': (s) => conn.prepare(s),
 			'Execute': (s,a) => s.execute(...a),
