@@ -136,6 +136,8 @@ function createManager(results, defaults = {
 		return new MySQLDBH(base);
 	}
 
+	const closed = [];
+
 	function createManager(poolSize, options) {
 		return {
 			create: () => Async.of(makeDBH()),
@@ -143,12 +145,12 @@ function createManager(results, defaults = {
 				const dbh = makeDBH();
 				return dbh.connect().map(_ => dbh);
 			},
-			toPool: (conn) => {},
+			toPool: (conn) => {closed.push(conn)},
 			shutdown: () => {},
 		};
 	}
 
-	return createManager;
+	return {createManager, closed};
 }
 
 

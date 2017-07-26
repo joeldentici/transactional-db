@@ -6,18 +6,22 @@ const {identity, constant} = require('fantasy-combinators');
 const transactional = require('../src/transactional.js');
 const {Async, Maybe, ConcurrentFree: F} = require('monadic-js');
 const T = transactional.Transaction;
+const Rx = require('rx');
+const RecordMapper = require('../src/recordmapper.js');
 
 //run Async computations in an immediate, blocking manner for unit tests.
 const oldScheduler = Async.setScheduler(x => x());
 
-transactional.register('mysql-test-1', createManager({
+const manager1 = createManager({
 	'select * from blah': [{id: 1, a: '1', b: '2'}, {id: 2, a: '2', b: '3'}],
 	'insert into blah(a,b) values(1,2)': {insertId: 3},
 	'delete from blah where id = 1': null,
 	'update blah set a = 2 where id = 1': null,
 	'select * from blah where id = 1': [{id: 1, a: '1', b: '2'}],
 	'select * from blah where id = 3': [],
-}));
+});
+
+transactional.register('mysql-test-1', manager1.createManager);
 
 exports.DBM = {
 	'test-1': test => {
@@ -50,5 +54,47 @@ exports.DBM = {
 		dbm.close();
 
 		test.done();
-	}
+	},
+	'test-2': test => {
+		const check = eq(test);
+
+		const dbm = transactional.create('mysql-test-1');
+
+		const comp = (method, call = true) => dbm.getConnection()
+			.chain(conn => {
+				conn.connect();
+				conn.close();
+				conn.close();
+				return call ? conn[method]() : Async.of(conn[method]);
+			});
+
+		const result1 = comp('beginTransaction').run().message;
+		const result2 = comp('commit').run().message;
+		const result3 = comp('rollback').run().message;
+		const result4 = comp('prepare').run().message;
+		const result5 = comp('connect').run().message;
+		const result6 = comp('status$', false).run();
+
+		const expected = "Cannot use closed pooled connection.";
+
+		check(result1, expected);
+		check(result2, expected);
+		check(result3, expected);
+		check(result4, expected);
+		check(result5, expected);
+		check(result6 instanceof Rx.Observable, true);
+
+		test.done();
+	},
+	'test-3': test => {
+		const check = eq(test);
+
+		const dbm = transactional.create('mysql-test-1');
+
+		const conn = dbm.createConnection().run();
+
+		check(conn instanceof RecordMapper, true);
+
+		test.done();
+	},
 }
