@@ -1,4 +1,7 @@
 # transactional-db
+[![Build Status](https://travis-ci.org/joeldentici/transactional-db.png?branch=master)](https://travis-ci.org/joeldentici/transactional-db)
+[![Coverage Status](https://coveralls.io/repos/github/joeldentici/transactional-db/badge.png?branch=master)](https://coveralls.io/github/joeldentici/transactional-db?branch=master)
+
 This library provides composable transactions for RDBMS. Currently only MySQL is supported through the use of `node-mysql`. Other databases can be supported by writing an appropriate adapter for their drivers and registering it with this library.
 
 transactional can be used in two ways, but only one is recommended. The first is to use it as a traditional Object Oriented library. It is written using methods that return promises so you don't need to worry about callback hell.
