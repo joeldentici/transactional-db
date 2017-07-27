@@ -4,7 +4,7 @@ monadic.loadDo('.ejs');
 
 const {nolog} = require('./logger.js');
 const DBHManager = require('./dbhmanager.js');
-const {createManager} = require('./mysql/mysqldbh.js');
+const {createManager, MySQLDBH} = require('./mysql/mysqldbh.js');
 
 /**
  *	Transactional
@@ -60,3 +60,7 @@ exports.Transaction = transaction.Transaction;
 
 /* Export Logger Stuff */
 exports.Logging = require('./logger.js');
+
+exports.MySQLDBH = MySQLDBH;
+
+exports.Test = require('../test-lib.js');
