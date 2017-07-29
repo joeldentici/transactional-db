@@ -24,7 +24,7 @@
     "test": "npm run coveralls"
   },
   "dependencies": {
-    "monadic-js": "^1.0.2",
+    "monadic-js": "^1.1.2",
     "mysql": "^2.10.2",
     "rx": "^4.1.0"
   },

@@ -42,7 +42,19 @@ exports.DBM = {
 		const result5 = dbm.runTransaction(T.delete('blah', 1)).run();
 		const result6 = dbm.runTransaction(T.delete('blah', {id: 1})).run();
 		const result7 = dbm.runTransaction(F.Control.throwE('blahhhh')).run();
+		const result8 = dbm.runTransaction(T.query('insert into blah(a,b) values(1,2)')).run();
+		const result9 = dbm.runTransaction(T.prepare('insert into blah(a,b) values(?,?)')
+			.chain(stmt => T.execute(stmt, 1, 2)))
+			.run();
 
+		const evs = [];
+		const result10 = dbm.runTransaction(T.emit('blah', {data: 'blah'}), {publish: (e, d) => {evs.push({type: e, data: d})}}).run();
+
+		const result11 = dbm.runTransaction(T.unit('hey')).run();
+		check(result11, 'hey');
+
+
+		check(evs, [{type: 'blah', data: {data: 'blah'}}]);
 		check(result, Maybe.of({id: 1, a: '1', b: '2'}));
 		check(result2, Maybe.Nothing);
 		check(result3, 3);
@@ -50,6 +62,8 @@ exports.DBM = {
 		check(result5, undefined);
 		check(result6, undefined);
 		check(result7, 'blahhhh');
+		check(result8, 3);
+		check(result9, 3);
 
 		dbm.close();
 
