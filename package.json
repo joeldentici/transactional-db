@@ -1,6 +1,6 @@
 {
   "name": "transactional-db",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library for composing database transactions.",
   "contributors": [
     {
